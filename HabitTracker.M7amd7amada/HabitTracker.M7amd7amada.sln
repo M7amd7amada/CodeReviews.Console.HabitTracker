@@ -7,8 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B099CDE2-7DF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabitTracker", "src\HabitTracker\HabitTracker.csproj", "{010D16EC-AD2E-4346-9456-220F198BE6C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabitTracker.Data", "src\HabitTracker.Data\HabitTracker.Data.csproj", "{6F5106E3-9EF5-43AF-A40E-AC0232737D04}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,13 +20,8 @@ Global
 		{010D16EC-AD2E-4346-9456-220F198BE6C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{010D16EC-AD2E-4346-9456-220F198BE6C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{010D16EC-AD2E-4346-9456-220F198BE6C7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6F5106E3-9EF5-43AF-A40E-AC0232737D04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F5106E3-9EF5-43AF-A40E-AC0232737D04}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F5106E3-9EF5-43AF-A40E-AC0232737D04}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F5106E3-9EF5-43AF-A40E-AC0232737D04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{010D16EC-AD2E-4346-9456-220F198BE6C7} = {B099CDE2-7DF9-4D22-9DA6-9DE11312B0C6}
-		{6F5106E3-9EF5-43AF-A40E-AC0232737D04} = {B099CDE2-7DF9-4D22-9DA6-9DE11312B0C6}
 	EndGlobalSection
 EndGlobal
