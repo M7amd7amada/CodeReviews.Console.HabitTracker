@@ -1,4 +1,6 @@
-﻿using HabitTracker.Handlers;
+﻿using HabitTracker.Data;
+using HabitTracker.Data.Interfaces;
+using HabitTracker.Handlers;
 using HabitTracker.Handlers.Interfaces;
 using HabitTracker.Services;
 
@@ -14,6 +16,7 @@ public class Program
             .AddSingleton<IInputManager, InputManager>()
             .AddSingleton<IDisplayManager, DisplayManager>()
             .AddSingleton<IOptionHandler, OptionHandler>()
+            .AddSingleton<IHabitRepository, HabitRepository>()
             .AddSingleton<IProgramManager, ProgramManager>()
             .BuildServiceProvider();
 
