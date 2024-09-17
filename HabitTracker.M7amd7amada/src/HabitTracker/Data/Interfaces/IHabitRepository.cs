@@ -8,4 +8,7 @@ public interface IHabitRepository
     void UpdateHabit(Habit habit);
     void DeleteHabit(Guid habitId);
     Habit? GetHabit(Guid habitId);
+    List<Habit> GetAllHabits();
+    int GetHabitOccurrencesCount(Guid habitId);
+    void InsertOccurrence(Guid habitId, DateTime date);
 }

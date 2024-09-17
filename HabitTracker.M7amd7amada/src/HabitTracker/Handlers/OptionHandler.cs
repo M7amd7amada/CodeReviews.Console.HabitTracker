@@ -1,18 +1,22 @@
+using HabitTracker.Data.Interfaces;
 using HabitTracker.Handlers.Interfaces;
 
 namespace HabitTracker.Handlers;
 
-public class OptionHandler : IOptionHandler
+public class OptionHandler(
+    IDisplayManager displayManager,
+    IInputManager inputManager,
+    IHabitRepository repository) : IOptionHandler
 {
     public void HandleOption(Option option)
     {
         switch (option.Name)
         {
             case nameof(Option.InsertRecord):
-                Console.WriteLine("Inserting record...");
+                InsertRecord();
                 break;
             case nameof(Option.ViewAllRecords):
-                Console.WriteLine("Viewing habits...");
+                ViewAllRecords();
                 break;
             case nameof(Option.UpdateRecord):
                 Console.WriteLine("Updating record...");
@@ -27,5 +31,18 @@ public class OptionHandler : IOptionHandler
                 Console.WriteLine("Invalid option.");
                 break;
         }
+    }
+
+    private void ViewAllRecords()
+    {
+        var habits = repository.GetAllHabits();
+        displayManager.DisplayHabits(habits);
+    }
+
+    private void InsertRecord()
+    {
+        displayManager.DisplayInsertHabit();
+        var habitName = inputManager.GetHabitName();
+        repository.AddHabit(habitName);
     }
 }

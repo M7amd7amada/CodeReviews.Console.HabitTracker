@@ -3,11 +3,14 @@ using HabitTracker.Models;
 
 namespace HabitTracker.Data;
 
-public class HabitRepository(AdoNetDbContext context) : IHabitRepository
+public class HabitRepository : IHabitRepository
 {
+    private readonly string _databasePath = "habits.db";
     public void AddHabit(string habitName)
     {
-        var query = "INSERT INTO Habits (Name) VALUES (@name)";
+        using AdoNetDbContext context = new(_databasePath);
+
+        var query = "INSERT INTO Habits (Id, Name) VALUES (@id, @name)";
         var paramaters = new Dictionary<string, object>
         {
             { "@id", Guid.NewGuid().ToString() },
@@ -18,6 +21,8 @@ public class HabitRepository(AdoNetDbContext context) : IHabitRepository
 
     public void InsertOccurrence(Guid habitId, DateTime date)
     {
+        using AdoNetDbContext context = new(_databasePath);
+
         var query = "INSERT INTO Occurrences (Date, HabitId) VALUES (@date, @habitId)";
         var paramaters = new Dictionary<string, object>
         {
@@ -28,14 +33,16 @@ public class HabitRepository(AdoNetDbContext context) : IHabitRepository
         context.ExecuteNonQuery(query, paramaters);
     }
 
-    public int GetHabitOccurrences(Guid habitId)
+    public int GetHabitOccurrencesCount(Guid habitId)
     {
         return (GetHabit(habitId) ?? throw new ArgumentNullException(nameof(habitId))).Occurrences.Count;
     }
 
     public List<Habit> GetAllHabits()
     {
-        var query = "SELECT Id, Name FROM Habit";
+        using AdoNetDbContext context = new(_databasePath);
+
+        var query = "SELECT Id, Name FROM Habits";
 
         var results = context.ExecuteQuery(query);
 
@@ -57,6 +64,7 @@ public class HabitRepository(AdoNetDbContext context) : IHabitRepository
 
     public void DeleteHabit(Guid habitId)
     {
+        using AdoNetDbContext context = new(_databasePath);
         var query = "DELETE FROM Habits WHERE Id = @id";
         var parameters = new Dictionary<string, object>
         {
@@ -67,6 +75,7 @@ public class HabitRepository(AdoNetDbContext context) : IHabitRepository
 
     public Habit? GetHabit(Guid habitId)
     {
+        using AdoNetDbContext context = new(_databasePath);
         var query = "SELECT Id, Name FROM Habits WHERE Id = @id";
         var parameters = new Dictionary<string, object>
         {
@@ -87,6 +96,7 @@ public class HabitRepository(AdoNetDbContext context) : IHabitRepository
 
     private List<Occurrence> GetOccurrences(Guid habitId)
     {
+        using AdoNetDbContext context = new(_databasePath);
         var query = "SELECT Id, Date FROM Occurrences";
 
         var results = context.ExecuteQuery(query);
@@ -107,6 +117,7 @@ public class HabitRepository(AdoNetDbContext context) : IHabitRepository
 
     public void UpdateHabit(Habit habit)
     {
+        using AdoNetDbContext context = new(_databasePath);
         var query = "UPDATE Habits SET Name = @name WHERE Id = @id";
         var parameters = new Dictionary<string, object>
         {

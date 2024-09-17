@@ -1,3 +1,4 @@
+using HabitTracker.Data;
 using HabitTracker.Handlers.Interfaces;
 
 namespace HabitTracker.Services;
@@ -9,6 +10,7 @@ public class ProgramManager(
 {
     public void Run()
     {
+        DatabaseSeeder.Seed();
         while (true)
         {
             displayManager.DisplayMainMenu();

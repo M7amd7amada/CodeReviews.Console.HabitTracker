@@ -21,4 +21,9 @@ public class InputManager : IInputManager
     {
         return int.TryParse(input, out int value) ? Option.FromValue(value) : Option.InvalidOption;
     }
+
+    public string GetHabitName()
+    {
+        return Console.ReadLine() ?? string.Empty;
+    }
 }

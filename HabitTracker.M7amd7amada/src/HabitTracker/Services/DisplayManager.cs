@@ -1,3 +1,7 @@
+using HabitTracker.Models;
+
+using Spectre.Console;
+
 namespace HabitTracker.Services;
 
 public class DisplayManager : IDisplayManager
@@ -24,5 +28,36 @@ public class DisplayManager : IDisplayManager
     private static void LineSeperator()
     {
         Console.WriteLine(new string('-', 60));
+    }
+
+    public void DisplayInsertHabit()
+    {
+        Console.Write("Insert the habit name: ");
+    }
+
+    public void DisplayInsertOccurrence()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DisplayHabits(List<Habit> habits)
+    {
+        var table = new Table();
+        table.AddColumn("ID");
+        table.AddColumn("Name");
+        table.AddColumn("Occurrences");
+
+        foreach (var habit in habits)
+        {
+            var occurrenceCount = habit.Occurrences.Count;
+
+            table.AddRow(
+                habit.Id.ToString(),
+                habit.Name,
+                occurrenceCount.ToString()
+            );
+        }
+
+        AnsiConsole.Write(table);
     }
 }
