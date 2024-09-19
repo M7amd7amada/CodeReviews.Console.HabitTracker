@@ -7,5 +7,5 @@ public class Occurrence
 
     // Relationships
     public Guid HabitId { get; set; }
-    public Habit Habit { get; set; } = default!;
+    public Habit Habit { get; set; } = new();
 }

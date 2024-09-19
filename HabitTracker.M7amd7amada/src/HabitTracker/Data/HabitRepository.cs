@@ -35,7 +35,8 @@ public class HabitRepository : IHabitRepository
 
     public int GetHabitOccurrencesCount(Guid habitId)
     {
-        return (GetHabit(habitId) ?? throw new ArgumentNullException(nameof(habitId))).Occurrences.Count;
+        return (GetHabit(habitId) ?? throw new ArgumentNullException(nameof(habitId)))
+            .Occurrences.Where(x => x.HabitId == habitId).Count();
     }
 
     public List<Habit> GetAllHabits()
@@ -65,12 +66,34 @@ public class HabitRepository : IHabitRepository
     public void DeleteHabit(Guid habitId)
     {
         using AdoNetDbContext context = new(_databasePath);
-        var query = "DELETE FROM Habits WHERE Id = @id";
-        var parameters = new Dictionary<string, object>
+
+        try
         {
-            { "@id", habitId.ToString() }
-        };
-        context.ExecuteNonQuery(query, parameters);
+            var deleteOccurrencesQuery = "DELETE FROM Occurrences WHERE HabitId = @id";
+            var occurrencesParameters = new Dictionary<string, object>
+            {
+                { "@id", habitId.ToString() }
+            };
+            int occurrencesDeleted = context.ExecuteNonQuery(deleteOccurrencesQuery, occurrencesParameters);
+            Console.WriteLine($"Deleted {occurrencesDeleted} occurrences for habit {habitId}");
+
+            var deleteHabitQuery = "DELETE FROM Habits WHERE Id = @id";
+            var habitParameters = new Dictionary<string, object>
+            {
+                { "@id", habitId.ToString() }
+            };
+            int habitsDeleted = context.ExecuteNonQuery(deleteHabitQuery, habitParameters);
+            Console.WriteLine($"Deleted {habitsDeleted} habits with ID {habitId}");
+
+            if (habitsDeleted == 0)
+            {
+                Console.WriteLine($"No habit found with ID {habitId}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting habit: {ex.Message}");
+        }
     }
 
     public Habit? GetHabit(Guid habitId)
@@ -94,27 +117,6 @@ public class HabitRepository : IHabitRepository
             : null;
     }
 
-    private List<Occurrence> GetOccurrences(Guid habitId)
-    {
-        using AdoNetDbContext context = new(_databasePath);
-        var query = "SELECT Id, Date FROM Occurrences";
-
-        var results = context.ExecuteQuery(query);
-
-        var occurrences = new List<Occurrence>();
-
-        foreach (var result in results)
-        {
-            occurrences.Add(new Occurrence
-            {
-                Id = Guid.Parse(result["Id"].ToString()!),
-                Date = result["Date"].ToString()!
-            });
-        }
-
-        return occurrences;
-    }
-
     public void UpdateHabit(Habit habit)
     {
         using AdoNetDbContext context = new(_databasePath);
@@ -126,4 +128,33 @@ public class HabitRepository : IHabitRepository
         };
         context.ExecuteNonQuery(query, parameters);
     }
+
+    private List<Occurrence> GetOccurrences(Guid habitId)
+    {
+        using AdoNetDbContext context = new(_databasePath);
+        var query = "SELECT Id, Date FROM Occurrences WHERE HabitId = @habitId";
+
+        var paramaters = new Dictionary<string, object>
+        {
+            { "@habitId", habitId}
+        };
+
+        var results = context.ExecuteQuery(query, paramaters);
+
+        var occurrences = new List<Occurrence>();
+
+        foreach (var result in results)
+        {
+            occurrences.Add(new Occurrence
+            {
+                Id = Guid.Parse(result["Id"].ToString()!),
+                Date = result["Date"].ToString()!,
+                HabitId = habitId,
+                Habit = GetHabit(habitId)!
+            });
+        }
+
+        return occurrences;
+    }
+
 }

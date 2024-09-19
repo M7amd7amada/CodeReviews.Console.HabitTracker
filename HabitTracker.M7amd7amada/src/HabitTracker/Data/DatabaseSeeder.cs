@@ -19,10 +19,6 @@ public static class DatabaseSeeder
             SeedOccurrences();
             Console.WriteLine("Database seeding completed.");
         }
-        else
-        {
-            Console.WriteLine("Database already has data. No seeding required.");
-        }
     }
 
     private static void SeedHabits()
@@ -53,10 +49,10 @@ public static class DatabaseSeeder
         var occurrenceFaker = new Faker<Occurrence>()
             .RuleFor(o => o.Id, f => Guid.NewGuid())
             .RuleFor(o => o.Date, f => f.Date.Past().ToString("yyyy-MM-dd"))
-            .RuleFor(o => o.HabitId, f => f.PickRandom(context
-                                                            .ExecuteQuery("SELECT Id FROM Habits")
-                                                            .Select(row => (Guid)row["Id"])
-                                                            .ToList()));
+            .RuleFor(o => o.HabitId, f => Guid.Parse(f.PickRandom(context
+                                                .ExecuteQuery("SELECT Id FROM Habits")
+                                                .Select(row => row["Id"].ToString())
+                                                .ToList())!));
 
         var occurrences = occurrenceFaker.Generate(20);
 

@@ -8,7 +8,7 @@ public class DisplayManager : IDisplayManager
 {
     public void DisplayMainMenu()
     {
-        Console.WriteLine("Main Menu\n");
+        Console.WriteLine("\nMain Menu\n");
         Console.WriteLine("What would you like to do?\n");
 
         Console.WriteLine("Type 0 to close the application.");
@@ -35,26 +35,45 @@ public class DisplayManager : IDisplayManager
         Console.Write("Insert the habit name: ");
     }
 
-    public void DisplayInsertOccurrence()
-    {
-        throw new NotImplementedException();
-    }
-
     public void DisplayHabits(List<Habit> habits)
     {
         var table = new Table();
-        table.AddColumn("ID");
+        table.AddColumn("#");
         table.AddColumn("Name");
         table.AddColumn("Occurrences");
+        var counter = 0;
 
         foreach (var habit in habits)
         {
+            counter++;
             var occurrenceCount = habit.Occurrences.Count;
 
             table.AddRow(
-                habit.Id.ToString(),
+                counter.ToString(),
                 habit.Name,
                 occurrenceCount.ToString()
+            );
+        }
+
+        AnsiConsole.Write(table);
+    }
+
+    public void DisplayOccurrences(List<Occurrence> occurrences)
+    {
+        var table = new Table();
+        table.AddColumn("#");
+        table.AddColumn("Habit Name");
+        table.AddColumn("Date");
+        var counter = 0;
+
+        foreach (var occurrence in occurrences ?? Enumerable.Empty<Occurrence>())
+        {
+            counter++;
+
+            table.AddRow(
+                counter.ToString(),
+                (occurrence.Habit ?? new()).Name ?? string.Empty,
+                occurrence.Date
             );
         }
 

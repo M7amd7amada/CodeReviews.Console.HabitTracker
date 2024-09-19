@@ -22,6 +22,7 @@ public class Program
 
         var programManager = serviceProvider.GetRequiredService<IProgramManager>();
 
+        Console.Clear();
         programManager.Run();
     }
 }
